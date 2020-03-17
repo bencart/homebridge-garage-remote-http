@@ -16,15 +16,6 @@ function GarageDoorOpener (log, config) {
   this.openURL = config.openURL
   this.closeURL = config.closeURL
 
-  this.openTime = config.openTime || 10
-  this.closeTime = config.closeTime || 10
-
-  this.switchOff = config.switchOff || false
-  this.switchOffDelay = config.switchOffDelay || 2
-
-  this.autoLock = config.autoLock || false
-  this.autoLockDelay = config.autoLockDelay || 20
-
   this.manufacturer = config.manufacturer || packageJson.author.name
   this.serial = config.serial || packageJson.version
   this.model = config.model || packageJson.name
@@ -35,8 +26,8 @@ function GarageDoorOpener (log, config) {
   this.timeout = config.timeout || 3000
   this.http_method = config.http_method || 'GET'
 
-  this.polling = config.polling || false
-  this.pollInterval = config.pollInterval || 120
+  this.polling = true
+  this.pollInterval = config.pollInterval || 1
   this.statusURL = config.statusURL
 
   if (this.username != null && this.password != null) {
@@ -105,13 +96,7 @@ GarageDoorOpener.prototype = {
           this.log('Started closing')
           this.simulateClose()
         } else {
-		  this.log('Started opening')
-		  if (this.switchOff) {
-			this.switchOffFunction()
-		  }
-          if (this.autoLock) {
-            this.autoLockFunction()
-          }
+		      this.log('Started opening')
           this.simulateOpen()
         }
         callback()
@@ -121,35 +106,10 @@ GarageDoorOpener.prototype = {
 
   simulateOpen: function () {
     this.service.getCharacteristic(Characteristic.CurrentDoorState).updateValue(2)
-    setTimeout(() => {
-      this.service.getCharacteristic(Characteristic.CurrentDoorState).updateValue(0)
-      this.log('Finished opening')
-    }, this.openTime * 1000)
   },
 
   simulateClose: function () {
     this.service.getCharacteristic(Characteristic.CurrentDoorState).updateValue(3)
-    setTimeout(() => {
-      this.service.getCharacteristic(Characteristic.CurrentDoorState).updateValue(1)
-      this.log('Finished closing')
-    }, this.closeTime * 1000)
-  },
-
-  autoLockFunction: function () {
-    this.log('Waiting %s seconds for autolock', this.autoLockDelay)
-    setTimeout(() => {
-      this.service.setCharacteristic(Characteristic.TargetDoorState, 1)
-      this.log('Autolocking...')
-    }, this.autoLockDelay * 1000)
-  },
-
-  switchOffFunction: function () {
-	this.log('Waiting %s seconds for switch off', this.switchOffDelay)
-    setTimeout(() => {
-	  this.log('SwitchOff...')
-	  this._httpRequest(this.closeURL, '', this.http_method, function (error, response, responseBody) {
-		}.bind(this))
-    }, this.switchOffDelay * 1000)
   },
 
   getServices: function () {

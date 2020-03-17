@@ -21,12 +21,8 @@ This [homebridge](https://github.com/nfarina/homebridge) plugin exposes a web-ba
        "name": "Garage",
        "openURL": "http://myurl.com/open",
        "closeURL": "http://myurl.com/close",
-       "openTime": "30",
-       "closeTime": "30",
-       "autoLock": "true",
-       "autoLockDelay": "30",
-       "switchOff": "true",
-       "switchOffDelay": "5"
+       "pollInterval": "30",
+       "statusURL": "http://myurl.com/status"
      }
 ]
 ```
@@ -38,19 +34,12 @@ This [homebridge](https://github.com/nfarina/homebridge) plugin exposes a web-ba
 | `name` | Name to appear in the Home app | N/A |
 | `openURL` | URL to trigger the opening of your garage | N/A |
 | `closeURL` | URL to trigger the closing of your garage | N/A |
+| `statusURL` | URL to retrieve state on poll | N/A |
 
 ### Optional fields
 | Key | Description | Default |
 | --- | --- | --- |
-| `openTime` | Time (in seconds) to simulate your garage opening | `10` |
-| `closeTime` | Time (in seconds) to simulate your garage closing | `10` |
-| `autoLock` | Whether your garage should auto-close after being opened | `false` |
-| `autoLockDelay` | Time (in seconds) until your garage will automatically close (if enabled) | `20` |
-| `switchOff` | Closes the garage immediately without animation. For IR remote control use. | `false` |
-| `switchOffDelay` | Time (in seconds) until your garage will automatically close without animation (if enabled) | `2` |
-| `polling` | Whether the state should be polled at intervals | `false` |
-| `pollInterval` | Time (in seconds) between device polls (if `polling` is enabled) | `120` |
-| `statusURL` | URL to retrieve state on poll (should return `0` or `1`) | N/A |
+| `pollInterval` | Time (in seconds) between device polls (if `polling` is enabled) | `1` |
 
 ### Additional options
 | Key | Description | Default |
@@ -69,3 +58,5 @@ This [homebridge](https://github.com/nfarina/homebridge) plugin exposes a web-ba
 | --- | --- |
 | `0` | Open |
 | `1` | Closed |
+| `2` | Opening |
+| `3` | Closing |
